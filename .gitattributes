@@ -39,3 +39,6 @@ Assets/Jetski_2.blend1 filter=lfs diff=lfs merge=lfs -text
 Assets/buoy_1.blend1 filter=lfs diff=lfs merge=lfs -text
 /*/*.blend filter=lfs diff=lfs merge=lfs -text
 /*.blend filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake.blend filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake_with_sky.blend filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake_with_sky_1080.blend filter=lfs diff=lfs merge=lfs -text
