@@ -18,7 +18,7 @@ def main():
     num_processes = 12
     chunk_size = num_images // num_processes
 
-    script_path = "/mnt/f/project/synthetic_data_generation11.py"
+    script_path = "synthetic_data_generation_4k.py"
     args = [
         (i * chunk_size, (i + 1) * chunk_size if i < num_processes - 1 else num_images, script_path)
         for i in range(num_processes)

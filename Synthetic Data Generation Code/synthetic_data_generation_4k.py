@@ -8,9 +8,9 @@ import sys
 
 
 # Paths and settings
-blend_file_path = "/mnt/f/project/Lake_with_sky.blend"
-asset_library_path = "./Assets"
-output_dir = "/mnt/f/Derick/Project"
+blend_file_path = "../Lake models/Lake_with_sky.blend"
+asset_library_path = "../Assets"
+output_dir = "./generated_data"
 images_dir = os.path.join(output_dir, "images")
 labels_dir = os.path.join(output_dir, "labels")
 os.makedirs(images_dir, exist_ok=True)

@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 # Base directory containing 'images' and 'labels' folders
-base_dir = "F:/Derick/Project"
+base_dir = "./generated_data"
 images_dir = os.path.join(base_dir, "images")
 labels_dir = os.path.join(base_dir, "labels")
 
