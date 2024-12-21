@@ -1,4 +1,3 @@
-
 # Model Training Code
 **Derick Miller**  
 **Dept. of Electrical and Computer Engineering**  
@@ -18,72 +17,238 @@ This folder contains all necessary scripts, configurations, and utilities for tr
 
 ## Preparing the Dataset
 
-To train and evaluate the models, download the **SeaDroneSee** dataset from the [MACVi website](https://macvi.com). Once downloaded, follow these steps:
+### **1. Data Download and Organization**
 
-1. **Download and Organize the Dataset**:
-   - Extract the dataset and place it into a directory. For example:
-     ```
-     /Data/SeaDroneSee/
-         ├── Train/
-         ├── Valid/
-         ├── Test/
-     ```
+#### **SeaDronesSee Object Detection v2 Dataset**
+- Download the dataset from [MACVi](https://macvi.com).
+- The dataset contains `Train`, `Valid`, and `Test` splits, stored in `Compressed` and `Uncompressed` formats.
+- Annotation files are provided separately in JSON format.
+- Example directory structure:
+  ```
+  /Data/SeaDronesSee Object Detection v2/
+      ├── Compressed/
+      │   ├── Train/
+      │   ├── Valid/
+      │   ├── Test/
+      ├── Uncompressed/
+      │   ├── Train/
+      │   ├── Valid/
+      │   ├── Test/
+      ├── Annotations/
+          ├── instances_train.json
+          ├── instances_valid.json
+          ├── instances_test.json
+  ```
 
-2. **Convert Labels to YOLO TXT Format**:
-   - Use the provided `parse_json.py` script to convert the JSON annotations into YOLO-compatible TXT format.
-   - Example command:
-     ```bash
-     python parse_json.py --input <path_to_json> --output <path_to_yolo_labels>
-     ```
+### **2. File Conversion**
 
-3. **For Faster R-CNN**:
-   - Convert YOLO TXT labels into VOC XML format using the `convert_parallel.py` script.
-   - Example command:
-     ```bash
-     python convert_parallel.py --yolo_path <path_to_yolo_labels> --voc_path <path_to_voc_annotations> --image_path <path_to_images>
-     ```
+#### **Convert JSON to YOLO TXT**
+- Use `parse_json.py` to convert JSON annotations to YOLO TXT format.
+- Command:
+  ```bash
+  python parse_json.py --input /path/to/json --output /path/to/yolo_labels
+  ```
+- Example output directory:
+  ```
+  /Data/SeaDronesSee Object Detection v2/
+      ├── Train/
+      │   ├── images/
+      │   ├── labels/
+      ├── Valid/
+      │   ├── images/
+      │   ├── labels/
+      ├── Test/
+          ├── images/
+          ├── labels/
+  ```
+
+#### **Convert YOLO TXT to VOC XML**
+- Use `convert_parallel.py` to generate VOC XML annotations for Faster R-CNN.
+- Command:
+  ```bash
+  python convert_parallel.py --yolo_path /path/to/yolo_labels --voc_path /path/to/voc_annotations --image_path /path/to/images
+  ```
+- Example output directory:
+  ```
+  /Data/Faster-RCNN/
+      ├── Train/
+      │   ├── images/
+      │   ├── annotations/
+      ├── Valid/
+      │   ├── images/
+      │   ├── annotations/
+  ```
 
 ---
 
-## Model-Specific Instructions
+## Model Training
 
-### **1. YOLOv11**
-- Navigate to the **YOLO11** folder for all relevant scripts and configurations.
-- Follow the instructions in the **YOLO11 README** to:
-  - Configure the `data.yaml` file for your dataset.
-  - Schedule training, validation, and testing jobs using SLURM.
-- Training is automated using scripts such as `schedule_yolo11.sh`, which can be submitted with:
+### **Mass Editing Scripts**
+
+#### **Overview**
+Mass editing scripts allow for efficient and uniform modifications across multiple training, validation, and test files for different dataset splits. This ensures consistency and saves time when adjusting parameters or configurations.
+
+#### **Examples of Mass Editing Scripts**
+
+**YOLO11 mass file edits**
+- `edit_yolo11_script.py`: Modify all training scripts.
+- `edit_yolo11_script_schedule.py`: Modify all training scheduler script.
+- `edit_yolo11_script_test.py`: Modify testing scripts.
+- `edit_yolo11_script_val.py`: Modify validation scripts.  
+
+
+**Faster R-CNN mass file edits**
+- `edit_all_train.py`: Modify all training scripts.
+- `edit_all_val.py`: Modify validation scripts.
+- `edit_all_test.py`: Modify testing scripts.
+- `edit_all_resume.py`: Modify resume training scripts.
+
+
+
+#### **Usage**
+To execute a mass editing script, simply edit the template inside the script and run the file.
+
+```bash
+python edit_all_train.py 
+```
+
+This will apply the specified changes across all relevant files, for the base dir, and folders specified.
+
+
+
+### **YOLOv11**
+
+#### **Configuration Example (`data.yaml`)**
+```yaml
+train: ../Train/images
+val: ../Valid/images
+test: /Data/SeaDronesSee Object Detection v2/Uncompressed/Test
+
+nc: 5
+names: ['0', '1', '2', '3', '4']
+```
+
+#### **Training Steps**
+
+##### **Individual Job Submission**
+- Navigate to the respective split folder and run:
   ```bash
   sbatch schedule_yolo11.sh
   ```
 
-### **2. Faster R-CNN**
-- Navigate to the **Faster R-CNN** folder for scripts and utilities.
-- Follow the instructions in the **Faster R-CNN README** to:
-  - Set up the dataset paths in `data.yaml`.
-  - Automate the generation of training scripts using `edit_all_train.py`.
-  - Schedule training, validation, and testing jobs with scripts like `Train_RCNN.sh`:
+##### **Batch Job Submission**
+- Submit jobs for all splits:
+  - Training:
     ```bash
-    sbatch Train_RCNN.sh
+    bash start_all.sh
+    ```
+  - Validation:
+    ```bash
+    bash start_all_val.sh
+    ```
+  - Testing:
+    ```bash
+    bash start_all_test.sh
+    ```
+
+#### **Results Conversion**
+- Convert YOLO predictions to COCO JSON format:
+  ```bash
+  python yolo_to_json.py --path /path/to/outputs --output results.json
+  ```
+
+---
+
+### **Faster R-CNN**
+
+#### **Configuration Example (`data.yaml`)**
+```yaml
+CLASSES:
+- __background__
+- '1'
+- '2'
+- '3'
+- '4'
+- '5'
+NC: 6
+SAVE_VALID_PREDICTION_IMAGES: false
+TRAIN_DIR_IMAGES: /Data/Faster-RCNN/Train/images
+TRAIN_DIR_LABELS: /Data/Faster-RCNN/Train/annotations
+VALID_DIR_IMAGES: /Data/Faster-RCNN/Valid/images
+VALID_DIR_LABELS: /Data/Faster-RCNN/Valid/annotations
+```
+
+#### **Training Steps**
+
+##### **Individual Job Submission**
+- Navigate to the respective split folder and run:
+  ```bash
+  sbatch Train_RCNN.sh
+  ```
+
+##### **Batch Job Submission**
+- Submit jobs for all splits:
+  - Training:
+    ```bash
+    bash run_all_train.sh
+    ```
+  - Validation:
+    ```bash
+    bash run_all_val.sh
+    ```
+  - Testing:
+    ```bash
+    bash resume_all.sh
     ```
 
 ---
 
-## Folder Structure
 
-```
-/Model_Training_Code
-    ├── YOLO11/                    # YOLOv11-specific training scripts and configurations
-    │   ├── schedule_yolo11.sh     # SLURM scheduler for YOLOv11 training
-    │   ├── start_all.sh           # Automates submission of YOLOv11 jobs
-    │   └── ...                    # Other YOLOv11 utilities
-    ├── Faster_RCNN/               # Faster R-CNN-specific training scripts and configurations
-    │   ├── Train_RCNN.sh          # SLURM scheduler for Faster R-CNN training
-    │   ├── edit_all_train.py      # Automates Faster R-CNN script generation
-    │   └── ...                    # Other Faster R-CNN utilities
-    ├── parse_json.py              # Converts JSON annotations to YOLO TXT format
-    ├── convert_parallel.py        # Converts YOLO TXT to VOC XML format
-```
+### **Batch Job Submission**
+
+Batch job submission scripts automate the scheduling of training, validation, and testing tasks for all dataset splits:
+
+- **YOLOv11**:
+  - Training:
+    ```bash
+    bash start_all.sh
+    ```
+  - Validation:
+    ```bash
+    bash start_all_val.sh
+    ```
+  - Testing:
+    ```bash
+    bash start_all_test.sh
+    ```
+
+- **Faster R-CNN**:
+  - Training:
+    ```bash
+    bash run_all_train.sh
+    ```
+  - Validation:
+    ```bash
+    bash run_all_val.sh
+    ```
+  - Testing:
+    ```bash
+    bash resume_all.sh
+    ```
+
+### **Individual Job Submission**
+
+For fine-grained control, individual job scripts can also be run for specific splits:
+
+- **YOLOv11**:
+  ```bash
+  sbatch schedule_yolo11.sh
+  ```
+
+- **Faster R-CNN**:
+  ```bash
+  sbatch Train_RCNN.sh
+  ```
 
 ---
 
