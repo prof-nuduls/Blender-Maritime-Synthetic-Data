@@ -1,5 +1,5 @@
 
-# Faster R-CNN Subfolder
+# Model Training Code
 **Derick Miller**  
 **Dept. of Electrical and Computer Engineering**  
 **Stevens Institute of Technology**  
@@ -9,86 +9,86 @@
 
 ## Overview
 
-The `pre-train` and `only_Real` subfolders contain scripts, utilities, and configuration files for training, testing, validating, and fine-tuning Faster R-CNN models on the JARVIS HPC. These scripts enable seamless management of training pipelines and automate tasks such as resuming training, evaluating models, and converting annotations.
+This folder contains all necessary scripts, configurations, and utilities for training and evaluating object detection models on the JARVIS HPC. The training workflows for **YOLOv11** and **Faster R-CNN** are based on official documentation and external repositories, with custom improvements to enhance compatibility and streamline model performance.
+
+- **YOLOv11**: Training scripts and configurations are adapted from the [Ultralytics YOLOv11 Documentation](https://docs.ultralytics.com), ensuring compatibility with SLURM-managed HPC environments and automating training pipelines.
+- **Faster R-CNN**: Training scripts are based on the repository [FasterRCNN PyTorch Training Pipeline](https://github.com/sovit-123/fasterrcnn-pytorch-training-pipeline) by Sovit Ranjan Rath, with enhancements for efficient weight loading and better integration with the dataset.
 
 ---
 
-## File Descriptions
+## Preparing the Dataset
 
-### **Training, Testing, and Validation Scripts**
-- **`Train_RCNN.sh`**: Script for training Faster R-CNN models.
-- **`resume_RCNN.sh`**: Script to resume training from the last checkpoint.
-- **`Test_RCNN.sh`**: Script for predicting on the test dataset using the trained weights.
-- **`Val_RCNN.sh`**: Script for validating the Faster R-CNN model on the validation dataset.
+To train and evaluate the models, download the **SeaDroneSee** dataset from the [MACVi website](https://macvi.com). Once downloaded, follow these steps:
 
-### **Helper Scripts**
-- **`convert_annot.py`**: Converts predictions into the proper submission format for MACVi evaluation.
-- **`convert_parallel.py`**: Converts YOLO TXT labels into VOC XML format, enabling Faster R-CNN compatibility.
-- **`edit_all_train.py`**: Automates the creation of training shell scripts for different configurations.
-- **`edit_all_val.py`**: Automates the creation of validation shell scripts for different configurations.
-- **`edit_all_test.py`**: Automates the creation of test shell scripts for different configurations.
-- **`edit_all_resume.py`**: Automates the creation of resume shell scripts for different configurations.
+1. **Download and Organize the Dataset**:
+   - Extract the dataset and place it into a directory. For example:
+     ```
+     /Data/SeaDroneSee/
+         ├── Train/
+         ├── Valid/
+         ├── Test/
+     ```
 
-### **Automation Scripts**
-- **`run_all_train.sh`**: Submits all training jobs for different configurations.
-- **`run_all_val.sh`**: Submits all validation jobs for different configurations.
-- **`run_all_test.sh`**: Submits all test jobs for different configurations.
-- **`resume_all.sh`**: Submits all jobs to resume training for different configurations.
+2. **Convert Labels to YOLO TXT Format**:
+   - Use the provided `parse_json.py` script to convert the JSON annotations into YOLO-compatible TXT format.
+   - Example command:
+     ```bash
+     python parse_json.py --input <path_to_json> --output <path_to_yolo_labels>
+     ```
+
+3. **For Faster R-CNN**:
+   - Convert YOLO TXT labels into VOC XML format using the `convert_parallel.py` script.
+   - Example command:
+     ```bash
+     python convert_parallel.py --yolo_path <path_to_yolo_labels> --voc_path <path_to_voc_annotations> --image_path <path_to_images>
+     ```
 
 ---
 
-## Data Configuration
+## Model-Specific Instructions
 
-This implementation requires a `data.yaml` file for defining paths to datasets, class labels, and other metadata. The `data.yaml` file must be configured for each training setup. Below is an example configuration:
+### **1. YOLOv11**
+- Navigate to the **YOLO11** folder for all relevant scripts and configurations.
+- Follow the instructions in the **YOLO11 README** to:
+  - Configure the `data.yaml` file for your dataset.
+  - Schedule training, validation, and testing jobs using SLURM.
+- Training is automated using scripts such as `schedule_yolo11.sh`, which can be submitted with:
+  ```bash
+  sbatch schedule_yolo11.sh
+  ```
 
-```yaml
-TRAIN_DIR_IMAGES: /Data/Faster-RCNN/Train/images
-TRAIN_DIR_LABELS: /Data/Faster-RCNN/Train/annotations
-VALID_DIR_IMAGES: /Data/Faster-RCNN/Valid/images
-VALID_DIR_LABELS: /Data/Faster-RCNN/Valid/annotations
-CLASSES: ['0', '1', '2', '3', '4']
-NC: 5
-SAVE_VALID_PREDICTION_IMAGES: True
+### **2. Faster R-CNN**
+- Navigate to the **Faster R-CNN** folder for scripts and utilities.
+- Follow the instructions in the **Faster R-CNN README** to:
+  - Set up the dataset paths in `data.yaml`.
+  - Automate the generation of training scripts using `edit_all_train.py`.
+  - Schedule training, validation, and testing jobs with scripts like `Train_RCNN.sh`:
+    ```bash
+    sbatch Train_RCNN.sh
+    ```
+
+---
+
+## Folder Structure
+
 ```
-
-
-
-## Usage Instructions
-
-1. **Training Faster R-CNN Models**:
-   - Ensure the `data.yaml` file is correctly configured.
-   - Run the `Train_RCNN.sh` script:
-     ```bash
-     sbatch Train_RCNN.sh
-     ```
-
-2. **Resuming Training**:
-   - To resume training from the last checkpoint, run the `resume_RCNN.sh` script:
-     ```bash
-     sbatch resume_RCNN.sh
-     ```
-
-3. **Testing**:
-   - Run predictions on the test dataset using `Test_RCNN.sh`:
-     ```bash
-     sbatch Test_RCNN.sh
-     ```
-
-4. **Validation**:
-   - Validate the model on the validation dataset using `Val_RCNN.sh`:
-     ```bash
-     sbatch Val_RCNN.sh
-     ```
-
-5. **Automating Job Submission**:
-   - Use `run_all_train.sh`, `run_all_val.sh`, `run_all_test.sh`, and `resume_all.sh` to submit multiple jobs for training, validation, testing, and resuming.
+/Model_Training_Code
+    ├── YOLO11/                    # YOLOv11-specific training scripts and configurations
+    │   ├── schedule_yolo11.sh     # SLURM scheduler for YOLOv11 training
+    │   ├── start_all.sh           # Automates submission of YOLOv11 jobs
+    │   └── ...                    # Other YOLOv11 utilities
+    ├── Faster_RCNN/               # Faster R-CNN-specific training scripts and configurations
+    │   ├── Train_RCNN.sh          # SLURM scheduler for Faster R-CNN training
+    │   ├── edit_all_train.py      # Automates Faster R-CNN script generation
+    │   └── ...                    # Other Faster R-CNN utilities
+    ├── parse_json.py              # Converts JSON annotations to YOLO TXT format
+    ├── convert_parallel.py        # Converts YOLO TXT to VOC XML format
+```
 
 ---
 
 ## Notes
-- Ensure all paths in the scripts and `data.yaml` are properly configured before running.
-- These scripts are designed for SLURM-managed HPC environments like JARVIS.
+- Ensure all paths and configurations are updated in the respective scripts and `data.yaml` files before running.
+- Refer to the individual READMEs in the **YOLO11** and **Faster R-CNN** subfolders for detailed usage instructions.
 
----
-
-For additional details or troubleshooting, refer to the project’s main documentation.
+For further assistance, refer to the [Ultralytics Documentation](https://docs.ultralytics.com) or [FasterRCNN PyTorch Training Pipeline Repository](https://github.com/sovit-123/fasterrcnn-pytorch-training-pipeline).
