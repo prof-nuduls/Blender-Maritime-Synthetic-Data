@@ -20,10 +20,10 @@ This project is specifically designed for Stevens researchers utilizing the JARV
 Below are examples of the generated data used in this project:
 
 ### **Example**
-![Synthetic Image](/Example%20Images/Example Images/example2.png)
+![Synthetic Image](https://github.com/prof-nuduls/Blender-Maritime-Synthetic-Data/blob/main/Example%20Images/example2.png)
 
 ### **Example with bounding boxes**
-![Synthetic Image with bounding box](/Example%20Images/Example Images/example1.png)
+![Synthetic Image with bounding box](https://github.com/prof-nuduls/Blender-Maritime-Synthetic-Data/blob/main/Example%20Images/example1.png)
 
 ---
 ## Project Structure
