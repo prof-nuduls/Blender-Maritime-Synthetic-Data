@@ -1,8 +1,8 @@
 import os
 
 # Base directory path where test_predict.py files should be created
-base_dir = "/mmfs1/home/dmiller10/EE800 Research/Code/Yolo11/models/300_epochs_x"
-folders = ['0%', '25%', '50%', '75%', '100%', '+25k', '+50k', '+90k']
+base_dir = "./"
+folders = ['pretrain',"only_real"]
 
 # Loop through each folder and write the test_predict.py file
 for folder in folders:
@@ -14,7 +14,7 @@ for folder in folders:
     
     # Define the template as a regular multi-line string with custom placeholders
     template = """#!/bin/bash
-yolo task=detect mode='val' model=./runs/detect/train/weights/best.pt data='/mmfs1/home/dmiller10/EE800 Research/Data/Yolo11/__folder__/data.yaml'
+yolo task=detect mode='val' model=path_to/data.yaml'
 
 
 """

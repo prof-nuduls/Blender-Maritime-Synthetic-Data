@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=synth_Test_Y      # Job name
+#SBATCH --job-name=only_real_Test_Y      # Job name
 #SBATCH --output=output_%j.txt          # Standard output log
 #SBATCH --error=error_%j.txt            # Standard error log
 #SBATCH --time=24:00:00                 # Time limit (10 hours)

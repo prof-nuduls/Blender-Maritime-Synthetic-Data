@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pretrain-Yolo11x      # Job name
+#SBATCH --job-name=f-Yolo11x-pretrain      # Job name
 #SBATCH --output=output_%j.txt          # Standard output log
 #SBATCH --error=error_%j.txt            # Standard error log
 #SBATCH --time=24:00:00                 # Time limit (10 hours)
@@ -10,6 +10,6 @@
 #SBATCH --gres=gpu:1                    # Request 4 GPUs
 
 
-pip install --user ultralytics supervision
-# Run the script using all 4 GPUs (0,1,2,3)
-srun ./yolo11.sh
+pip install --user ultralytics supervision roboflow
+# Install the required packages for Ultralytics YOLO and Weights & Biases
+srun ./yolo11_resume.sh

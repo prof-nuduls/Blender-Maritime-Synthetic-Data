@@ -1,8 +1,8 @@
 import os
 
 # Base directory path where test_predict.py files should be created
-base_dir = "/mmfs1/home/dmiller10/EE800 Research/Code/Yolo11/models/300_epochs_full"
-folders = ['0%', '25%', '50%', '75%', '100%', '+25k', '+50k', '+90k']
+base_dir = "./"
+folders = ['pretrain',"only_real"]
 
 # Loop through each folder and write the test_predict.py file
 for folder in folders:

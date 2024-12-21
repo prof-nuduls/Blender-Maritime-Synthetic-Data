@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Array of directories to process
-#folders=("0%" "25%" "50%" "75%" "100%")
-folders=("+25k" "+50k" "+90k")
+folders=("pretrain","only_real")
 # Base path where the folders are located
-base_path="/mmfs1/home/dmiller10/EE800 Research/Code/Yolo11/models/300_epochs_x"
+base_path="./"
 
 # Loop through each folder and submit the job
 for folder in "${folders[@]}"; do
