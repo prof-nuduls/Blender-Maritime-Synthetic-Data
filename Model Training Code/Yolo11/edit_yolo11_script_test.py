@@ -2,7 +2,7 @@ import os
 
 # Base directory path where test_predict.py files should be created
 base_dir = "./"
-folders = ['pretrain',"only_real"]
+folders = ['pre-train',"only_real"]
 
 # Loop through each folder and write the test_predict.py file
 for folder in folders:
