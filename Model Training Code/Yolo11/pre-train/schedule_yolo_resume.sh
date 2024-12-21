@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=f-Yolo11x-0%      # Job name
+#SBATCH --job-name=f-Yolo11x-pre-train      # Job name
 #SBATCH --output=output_%j.txt          # Standard output log
 #SBATCH --error=error_%j.txt            # Standard error log
 #SBATCH --time=24:00:00                 # Time limit (10 hours)
