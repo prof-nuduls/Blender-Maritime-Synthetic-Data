@@ -14,6 +14,18 @@ This project is specifically designed for Stevens researchers utilizing the JARV
 
 ---
 
+
+## Example Images
+
+Below are examples of the generated data used in this project:
+
+### **Example**
+![Synthetic Image](/Example%20Images/Example Images/example2.png)
+
+### **Example with bounding boxes**
+![Synthetic Image with bounding box](/Example%20Images/Example Images/example1.png)
+
+---
 ## Project Structure
 
 ### **1. Lake Models**
