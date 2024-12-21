@@ -1,8 +1,8 @@
 import os
 
 # Base directory path where Train_RCNN.sh files should be created
-base_dir = "/mmfs1/home/dmiller10/EE800 Research/Code/Faster_RCNN/model/models/300_epochs_full"
-folders = ['0%', '25%', '50%', '75%', '100%', '+25k', '+50k', '+90k']
+base_dir = "./"
+folders = ['pre-train','only_Real']
 
 # Template for the Train_RCNN.sh file
 template = """#!/bin/bash
@@ -14,7 +14,7 @@ template = """#!/bin/bash
 #SBATCH --ntasks=1                            # One task
 #SBATCH --cpus-per-task=8                     # Request 8 CPU cores
 
-python eval.py --model fasterrcnn_resnet50_fpn_v2 --weights /outputs/training/{folder}_Faster_RCNN_v2_p30/best_model.pth --data "/mmfs1/home/dmiller10/EE800 Research/Data/Faster-RCNN/{folder}/data_configs/data.yaml" --imgsz 1920 --batch 4 --verbose"""
+python eval.py --model fasterrcnn_resnet50_fpn_v2 --weights /outputs/training/{folder}_Faster_RCNN_v2_p30/best_model.pth --data "/Data/Faster-RCNN/{folder}/data_configs/data.yaml" --imgsz 1280 --batch 4 --verbose"""
 
 # Loop through each folder and write the Train_RCNN.sh file
 for folder in folders:

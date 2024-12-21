@@ -76,7 +76,7 @@ def process_file(args):
     else:
         print(f"Image not found for {os.path.basename(yolo_path)}, skipping.")
 
-def process_folder(yolo_labels_path, voc_annotations_path, images_path, cpu_count=2000):
+def process_folder(yolo_labels_path, voc_annotations_path, images_path, cpu_count=8):
     yolo_files = os.listdir(yolo_labels_path)
     file_args = []
     for file in yolo_files:
@@ -92,8 +92,8 @@ def process_folder(yolo_labels_path, voc_annotations_path, images_path, cpu_coun
         list(tqdm(pool.imap_unordered(process_file, file_args), total=len(file_args), desc="Processing files"))
 
 # Paths
-yolo_base_path = "/mmfs1/home/dmiller10/AAI646 Research/Data/"
-faster_rcnn_base_path = "/mmfs1/home/dmiller10/AAI646 Research/Data/"
+yolo_base_path = "/AAI646 Research/Data/"
+faster_rcnn_base_path = "/AAI646 Research/Data/"
 
 subfolders = ['Train', 'Valid']
 

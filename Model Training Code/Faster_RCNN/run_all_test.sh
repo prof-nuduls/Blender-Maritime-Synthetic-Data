@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Base directory where the training folders (like 0%, 25%, etc.) are located
-BASE_DIR="/mmfs1/home/dmiller10/EE800 Research/Code/Faster_RCNN/model/models/300_epochs_full"
+BASE_DIR="./"
 
 # List of folders to process
-FOLDERS=("0%" "25%" "50%" "75%" "100%" "+25k" "+50k" "+90k")
-FOLDERS=("0%" "25%" "50%" "75%" "100%")
+FOLDERS=("pre-train", "only_Real")
+
 # Loop over each folder, cd into it, and submit the job script
 for folder in "${FOLDERS[@]}"; do
     # Define the directory path for each folder
