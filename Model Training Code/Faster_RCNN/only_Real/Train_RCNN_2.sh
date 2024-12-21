@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pt-FR-300epochs      # Job name reflecting folder/model
+#SBATCH --job-name=only_Real-FR-300epochs      # Job name reflecting folder/model
 #SBATCH --output=output_%j.txt                # Standard output log
 #SBATCH --error=error_%j.txt                  # Standard error log
 #SBATCH --time=24:00:00                       # Time limit (10 hours)
@@ -13,4 +13,4 @@ export MASTER_ADDR=localhost
 export MASTER_PORT=29501
 export CUDA_VISIBLE_DEVICES=0
 
-python -m torch.distributed.launch --nproc_per_node=1 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT --use-env train.py --data "/mmfs1/home/dmiller10/EE800 Research/Data/Faster-RCNN/0%/data_configs/data.yaml" --epochs 300  --model fasterrcnn_resnet50_fpn_v2  --name real_Faster_RCNN_v2_p30  --batch 8  --imgsz 1280  --patience 50
+python -m torch.distributed.launch --nproc_per_node=1 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT --use-env train.py      --data "/Data/Faster-RCNN/only_Real/data_configs/data.yaml"     --epochs 300     --model fasterrcnn_resnet50_fpn_v2     --name only_Real_Faster_RCNN_v2_p30     --batch 8     --imgsz 1280     --patience 50

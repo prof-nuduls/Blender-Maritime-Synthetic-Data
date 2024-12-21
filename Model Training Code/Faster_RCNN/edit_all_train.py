@@ -1,8 +1,8 @@
 import os
 
 # Base directory path where Train_RCNN.sh files should be created
-base_dir = "/mmfs1/home/dmiller10/EE800 Research/Code/Faster_RCNN/model/models/300_epochs_full"
-folders = ['0%', '25%', '50%', '75%', '100%', '+25k', '+50k', '+90k']
+base_dir = "./"
+folders = ['pre-train','only_Real']
 
 # Template for the Train_RCNN.sh file
 template = """#!/bin/bash
@@ -21,12 +21,12 @@ export MASTER_PORT=29501
 export CUDA_VISIBLE_DEVICES=0
 
 python -m torch.distributed.launch --nproc_per_node=1 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT --use-env train.py  \
-    --data "/mmfs1/home/dmiller10/EE800 Research/Data/Faster-RCNN/{folder}/data_configs/data.yaml" \
+    --data "/Data/Faster-RCNN/{folder}/data_configs/data.yaml" \
     --epochs 300 \
     --model fasterrcnn_resnet50_fpn_v2 \
     --name {folder}_Faster_RCNN_v2_p30 \
     --batch 8 \
-    --imgsz 1920 \
+    --imgsz 1280 \
     --patience 50
 """
 
