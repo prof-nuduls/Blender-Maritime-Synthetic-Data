@@ -46,3 +46,6 @@ Lake[[:space:]]models/Lake_with_sky_1080.blend filter=lfs diff=lfs merge=lfs -te
 */.png filter=lfs diff=lfs merge=lfs -text
 Example[[:space:]]Images/example1.png filter=lfs diff=lfs merge=lfs -text
 Example[[:space:]]Images/example2.png filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake.blend1 filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake_with_sky.blend1 filter=lfs diff=lfs merge=lfs -text
+Lake[[:space:]]models/Lake_with_sky_1080.blend1 filter=lfs diff=lfs merge=lfs -text
